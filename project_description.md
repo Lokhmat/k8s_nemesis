@@ -51,16 +51,14 @@ Backend engineers
 3. **User-Defined Scaling Rules**
 
 	Provide users with the ability to define their own scaling policies based on specific metrics or events. These policies could specify thresholds for scaling up, scaling down, or scaling to zero.
-4. **Authentication and authorization**
 
-	Secure the service using authentication via password.
-5. **Load balancing**
+4. **Load balancing**
 
 	Implement a custom load balancing mechanism that distributes traffic or workload across available application instances. The load balancer will dynamically adjust based on the current state of the scaled application, considering scenarios where instances may be scaled to zero.
-6. **Reports and alerting**
+5. **Reports and alerting**
 
 	Generate detailed reports on scaling events, resource utilization, and application performance over time. Provide real-time alerts to users when scaling events are triggered, or when thresholds are exceeded.
-7. **UI with analytics**
+6. **UI with analytics**
 
 	A user-friendly web interface that displays analytics, including historical scaling events, current cluster status, and usage statistics.
 
