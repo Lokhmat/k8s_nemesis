@@ -1,7 +1,6 @@
 # Project Overview
 
-This project contains two Python programs: `8queens.py` and `kwic.py`.
-for Eight Queens (8Q) and Key Word in Context (KWIC) problems accordingly.
+This project contains solutions for two problems: Eight Queens (8Q) and Key Word in Context (KWIC) accordingly.
 
 ## 8 Queens
 
@@ -36,9 +35,9 @@ Q . . . . . . .
 
 ## KWIC
 
-The `kwic.py` program implements a Key Word In Context (KWIC) index. 
-It reads lines of text from standard input, generates all circular shifts of each line, 
-sorts the shifts alphabetically, and prints the sorted shifts.  
+Solution for kwic contains of four separate programs (filters). 
+First reads lines of text from standard input, second generates all circular shifts of each line, third 
+sorts the shifts alphabetically, and the last one filter prints the sorted shifts.  
 
 ### How to Run
 
