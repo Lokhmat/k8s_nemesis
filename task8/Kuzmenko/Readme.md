@@ -9,6 +9,8 @@ for Eight Queens (8Q) and Key Word in Context (KWIC) problems accordingly.
 The `Eight_Queens.py` program solves the classic 8 Queens problem, 
 where the goal is to place 8 queens on a chessboard such that no two queens threaten each other.
 
+Method 3 (Pipes-and-filters) was used for this problem.
+
 ### How to Run
 
 1. Run the program using the following command:
@@ -28,6 +30,8 @@ Solution: (0, 6, 3, 5, 7, 1, 4, 2)
 The `kw.py` program implements a Key Word In Context (KWIC) index. 
 It reads lines of text from standard input, generates all circular shifts of each line, 
 sorts the shifts alphabetically according a keyword, and prints the sorted shifts.  
+
+Method 1 (Abstract Data Types) was used for this problem.
 
 ### How to Run
 
