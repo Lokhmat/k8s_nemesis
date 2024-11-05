@@ -1,0 +1,28 @@
+plugins {
+    id 'java'
+}
+
+group = 'ru.hse.edu.asd.vslopatkin.task8.kwic'
+version = '1.0-SNAPSHOT'
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'ru.hse.edu.asd.vslopatkin.task8.kwic.KWICApp'
+        )
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+
+test {
+    useJUnitPlatform()
+}

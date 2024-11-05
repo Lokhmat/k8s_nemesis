@@ -1,0 +1,27 @@
+plugins {
+    id 'java'
+}
+
+group = 'ru.hse.edu.asd.vslopatkin.task8.queens'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'ru.hse.edu.asd.vslopatkin.task8.queens.EightQueensApp'
+        )
+    }
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+}
+
+test {
+    useJUnitPlatform()
+}
