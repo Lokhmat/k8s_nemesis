@@ -1,0 +1,236 @@
+openapi: 3.0.0
+info:
+  title: CustomAutoscaler and Autoscaler API
+  version: v1
+paths:
+  # Kubernetes API для управления CustomAutoscaler
+  /apis/autoscaler-group.autoscaler/v1alpha1/namespaces/{namespace}/customautoscalers:
+    get:
+      summary: Получить список всех CustomAutoscaler ресурсов в указанном пространстве имен
+      parameters:
+        - $ref: '#/components/parameters/namespace'
+      responses:
+        '200':
+          description: Список CustomAutoscaler ресурсов
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CustomAutoscaler'
+    post:
+      summary: Создать новый CustomAutoscaler ресурс
+      parameters:
+        - $ref: '#/components/parameters/namespace'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomAutoscaler'
+      responses:
+        '201':
+          description: CustomAutoscaler успешно создан
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomAutoscaler'
+  /apis/autoscaler-group.autoscaler/v1alpha1/namespaces/{namespace}/customautoscalers/{name}:
+    get:
+      summary: Получить конкретный CustomAutoscaler ресурс
+      parameters:
+        - $ref: '#/components/parameters/namespace'
+        - $ref: '#/components/parameters/name'
+      responses:
+        '200':
+          description: CustomAutoscaler ресурс
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomAutoscaler'
+    put:
+      summary: Обновить существующий CustomAutoscaler ресурс
+      parameters:
+        - $ref: '#/components/parameters/namespace'
+        - $ref: '#/components/parameters/name'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomAutoscaler'
+      responses:
+        '200':
+          description: CustomAutoscaler успешно обновлен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomAutoscaler'
+    patch:
+      summary: Частично обновить существующий CustomAutoscaler ресурс
+      parameters:
+        - $ref: '#/components/parameters/namespace'
+        - $ref: '#/components/parameters/name'
+      requestBody:
+        required: true
+        content:
+          application/merge-patch+json:
+            schema:
+              $ref: '#/components/schemas/CustomAutoscaler'
+      responses:
+        '200':
+          description: CustomAutoscaler успешно обновлен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomAutoscaler'
+    delete:
+      summary: Удалить существующий CustomAutoscaler ресурс
+      parameters:
+        - $ref: '#/components/parameters/namespace'
+        - $ref: '#/components/parameters/name'
+      responses:
+        '200':
+          description: CustomAutoscaler успешно удален
+
+  # API автоскейлера для получения метрик от сайдкара
+  /metrics:
+    post:
+      summary: Получить метрики от сайдкара в автоскейлер
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PodMetrics'
+      responses:
+        '200':
+          description: Метрики успешно получены
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: "Metrics received"
+
+components:
+  parameters:
+    namespace:
+      name: namespace
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Имя пространства имен Kubernetes
+    name:
+      name: name
+      in: path
+      required: true
+      schema:
+        type: string
+      description: Имя ресурса CustomAutoscaler
+  schemas:
+    CustomAutoscaler:
+      type: object
+      required:
+        - apiVersion
+        - kind
+        - metadata
+        - spec
+      properties:
+        apiVersion:
+          type: string
+          enum:
+            - autoscaler-group.autoscaler/v1alpha1
+        kind:
+          type: string
+          enum:
+            - CustomAutoscaler
+        metadata:
+          type: object
+          properties:
+            name:
+              type: string
+            namespace:
+              type: string
+            labels:
+              type: object
+              additionalProperties:
+                type: string
+            annotations:
+              type: object
+              additionalProperties:
+                type: string
+        spec:
+          type: object
+          properties:
+            loadBalancingAlgorithm:
+              type: string
+              description: |
+                Алгоритм балансировки нагрузки (например, "RoundRobin", "LeastConnections", "Random" и т.д.)
+            targetDeployments:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                    description: Имя деплоймента
+                  apiPrefix:
+                    type: string
+                    description: Префикс API
+                  port:
+                    type: string
+                    description: Порт деплоймента
+                  service:
+                    type: string
+                    description: Имя сервиса, связанного с деплойментом
+            idleTime:
+              type: integer
+              format: int64
+              description: Время в секундах перед скейлингом до нуля
+            cpuThreshold:
+              type: number
+              format: int64
+              description: Порог использования CPU (в милиядрах)
+            memoryThreshold:
+              type: integer
+              format: int64
+              description: Порог использования памяти (в Ми)
+            responseTimeThreshold:
+              type: integer
+              format: int64
+              description: Порог среднего времени ответа (в миллисекундах)
+    PodMetrics:
+      type: object
+      required:
+        - podName
+        - namespace
+        - metrics
+      properties:
+        podName:
+          type: string
+          description: Имя пода, от которого отправляются метрики
+        namespace:
+          type: string
+          description: Пространство имен, в котором находится под
+        metrics:
+          type: object
+          properties:
+            cpuUsage:
+              type: number
+              format: float
+              description: Использование CPU в милиядрах
+            memoryUsage:
+              type: number
+              format: float
+              description: Использование памяти в Ми
+            responseTime:
+              type: number
+              format: float
+              description: Среднее время ответа в миллисекундах
