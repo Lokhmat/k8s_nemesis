@@ -1,0 +1,179 @@
+openapi: 3.0.3
+info:
+  title: Updated Load Balancer Microservice API
+  description: Reflecting the revised architecture with `clientRequest`, `requestData`, and detailed flow updates.
+  version: 1.1.0
+paths:
+  /loadbalancer/settings:
+    get:
+      summary: Get current load balancing settings
+      description: |
+        **Steps for "Set Load Policy" Use Case:**
+        1. Send a GET request to retrieve the current load balancer settings.
+      responses:
+        "200":
+          description: Successfully retrieved settings.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  policy:
+                    type: string
+                    example: "round_robin"
+                  max_connections:
+                    type: integer
+                    example: 200
+    put:
+      summary: Update load balancing settings
+      description: |
+        **Steps for "Set Load Policy" Use Case:**
+        2. Use a PUT request to apply new load balancing rules.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                policy:
+                  type: string
+                  enum: ["round_robin", "least_connections"]
+                  example: "least_connections"
+                max_connections:
+                  type: integer
+                  example: 100
+      responses:
+        "200":
+          description: Settings updated successfully.
+
+  /proxy/request:
+    post:
+      summary: Proxy a client request to a target service
+      description: |
+        **Steps for "Proxy Request" Use Case:**
+        1. Client sends a request to this endpoint with the target URL and payload.
+        2. LoadBalancerProxy forwards the request to the Target Application API.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                target_url:
+                  type: string
+                  example: "http://target-service/api"
+                data:
+                  type: object
+                  additionalProperties: true
+      responses:
+        "200":
+          description: Request proxied successfully.
+
+  /proxy/logs:
+    get:
+      summary: Get logs of client requests
+      description: |
+        **Steps for "Proxy Request" Use Case:**
+        2. Retrieve logs of all proxied requests.
+      responses:
+        "200":
+          description: Successfully retrieved logs.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    timestamp:
+                      type: string
+                      format: date-time
+                      example: "2024-11-24T15:00:00Z"
+                    target_url:
+                      type: string
+                      example: "http://target-service/api"
+                    status:
+                      type: integer
+                      example: 200
+
+  /target-app/api:
+    get:
+      summary: Retrieve data from the Target Application API
+      description: Fetch specific data or status from the target application.
+      parameters:
+        - name: query
+          in: query
+          required: false
+          schema:
+            type: string
+            example: "status"
+      responses:
+        "200":
+          description: Successfully retrieved data.
+          content:
+            application/json:
+              schema:
+                type: object
+                additionalProperties: true
+
+    post:
+      summary: Send a request to the Target Application API
+      description: Create or trigger an action on the target application.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                action:
+                  type: string
+                  example: "create_task"
+                parameters:
+                  type: object
+                  additionalProperties: true
+      responses:
+        "200":
+          description: Interaction completed successfully.
+
+    put:
+      summary: Update data in the Target Application API
+      description: Modify existing data or configuration in the target application.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                resource_id:
+                  type: string
+                  example: "task-123"
+                updates:
+                  type: object
+                  additionalProperties: true
+      responses:
+        "200":
+          description: Update completed successfully.
+
+    patch:
+      summary: Partially update data in the Target Application API
+      description: Apply partial modifications to an existing resource in the target application.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                resource_id:
+                  type: string
+                  example: "task-123"
+                changes:
+                  type: object
+                  additionalProperties: true
+      responses:
+        "200":
+          description: Partial update completed successfully.
