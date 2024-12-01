@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fibonacci-deployment
+  namespace: autoscaler-controller-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fibonacci
+  template:
+    metadata:
+      labels:
+        app: fibonacci
+    spec:
+      containers:
+        - name: fibonacci-container
+          image: fibonacci:latest
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 5000

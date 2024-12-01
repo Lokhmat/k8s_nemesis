@@ -1,0 +1,9 @@
+apiVersion: autoscaler-group.autoscaler/v1alpha1
+kind: CustomAutoscaler
+metadata:
+  labels:
+    app.kubernetes.io/name: autoscaler-controller
+    app.kubernetes.io/managed-by: kustomize
+  name: customautoscaler-sample
+spec:
+  # TODO(user): Add fields here

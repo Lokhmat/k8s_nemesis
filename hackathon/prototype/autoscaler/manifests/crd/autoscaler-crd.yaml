@@ -1,0 +1,59 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: customautoscalers.autoscaler-group.autoscaler
+spec:
+  group: autoscaler-group.autoscaler
+  versions:
+    - name: v1alpha1
+      served: true
+      storage: true
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                loadBalancingAlgorithm:
+                  type: string
+                  description: >
+                    The load balancing algorithm to use (e.g., "RoundRobin", "LeastConnections", "Random", etc.)
+                targetDeployments:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      apiPrefix:
+                        type: string
+                      port:
+                        type: string
+                      service:
+                        type: string
+                idleTime:
+                  type: integer
+                  format: int64
+                  description: Time in seconds before scaling down to zero
+                cpuThreshold:
+                  type: number
+                  format: int64
+                  description: CPU usage threshold (in millicores)
+                memoryThreshold:
+                  type: integer
+                  format: int64
+                  description: Memory usage threshold (in Mi)
+                responseTimeThreshold:
+                  type: integer
+                  format: int64
+                  description: Average response time threshold (in milliseconds)
+      subresources:
+        status: {}
+  scope: Namespaced
+  names:
+    plural: customautoscalers
+    singular: customautoscaler
+    kind: CustomAutoscaler
+    shortNames:
+      - ca

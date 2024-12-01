@@ -1,0 +1,14 @@
+apiVersion: autoscaler-group.autoscaler/v1alpha1
+kind: CustomAutoscaler
+metadata:
+  name: fibonacci-autoscaler
+  namespace: autoscaler-controller-system
+spec:
+  targetDeployments:
+    - name: fibonacci-deployment
+      apiPrefix: /fibonacci
+      port: "5001"
+      service: fibonacci-service
+  idleTime: 90  # Время простоя в секундах
+  cpuThreshold: 700  # В миллиядрах (0.5 CPU)
+  memoryThreshold: 15  # В MiB

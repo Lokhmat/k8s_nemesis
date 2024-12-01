@@ -1,0 +1,15 @@
+apiVersion: autoscaler-group.autoscaler/v1alpha1
+kind: CustomAutoscaler
+metadata:
+  name: nginx-autoscaler
+  namespace: autoscaler-controller-system
+spec:
+  targetDeployments:
+    - name: app-deployment
+      apiPrefix: /app1
+      port: "8081"
+      service: app-service
+  idleTime: 60  # Время простоя в секундах
+  cpuThreshold: 700  # В миллиядрах (0.5 CPU)
+  memoryThreshold: 15  # В MiB
+  responseTimeThreshold: 200  # В миллисекундах

@@ -1,0 +1,12 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: autoscaler-controller-rolebinding
+subjects:
+  - kind: ServiceAccount
+    name: autoscaler-controller-controller-manager
+    namespace: autoscaler-controller-system
+roleRef:
+  kind: ClusterRole
+  name: autoscaler-controller-role
+  apiGroup: rbac.authorization.k8s.io

@@ -1,0 +1,42 @@
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: manager-role
+rules:
+- apiGroups:
+  - autoscaler-group.autoscaler
+  resources:
+  - customautoscalers
+  verbs:
+  - create
+  - delete
+  - get
+  - list
+  - patch
+  - update
+  - watch
+- apiGroups:
+  - autoscaler-group.autoscaler
+  resources:
+  - customautoscalers/finalizers
+  verbs:
+  - update
+- apiGroups:
+  - autoscaler-group.autoscaler
+  resources:
+  - customautoscalers/status
+  verbs:
+  - get
+  - patch
+  - update
+  - list
+- apiGroups: ["apps"]
+  resources: ["deployments/scale"]
+  verbs: ["get", "update", "patch", "list"]
+- apiGroups: ["apps"]
+  resources: ["deployments"]
+  verbs: ["get", "list", "watch", "update", "patch"]
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get", "list", "watch", "update", "patch"]
