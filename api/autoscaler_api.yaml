@@ -96,10 +96,10 @@ paths:
         '200':
           description: CustomAutoscaler успешно удален
 
-  # API автоскейлера для получения метрик от сайдкара
+  # API автоскейлера для отправки метрик от сайдкара
   /metrics:
     post:
-      summary: Получить метрики от сайдкара в автоскейлер
+      summary: Отправить метрики от сайдкара в автоскейлер
       requestBody:
         required: true
         content:
