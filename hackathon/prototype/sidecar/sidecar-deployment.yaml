@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sidecar-deployment
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: sidecar
+  template:
+    metadata:
+      labels:
+        app: sidecar
+    spec:
+      containers:
+      - name: metrics-collector
+        image: lohmat/sidecar:latest
+        env:
+        - name: API_URL
+          value: "http://api-service:8080/metrics" # API endpoint to send metrics
+        - name: DEPLOYMENT_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.labels['app.kubernetes.io/name']
+        - name: POD_ID
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.uid
+        - name: HOSTNAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name

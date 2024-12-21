@@ -1,11 +1,29 @@
-FROM golang:1.20-alpine
+# Stage 1: Build the application
+FROM golang:1.20-alpine as builder
 
+# Set the working directory
 WORKDIR /app
 
+# Copy go.mod and go.sum for dependency resolution
+COPY go.mod go.sum ./
+
+# Download dependencies
+RUN go mod download
+
+# Copy the rest of the application source code
 COPY . .
 
-RUN go mod init sidecar && go mod tidy
+# Build the application
+RUN go build -o sidecar ./cmd/main.go
 
-RUN go build -o sidecar .
+# Stage 2: Create a lightweight runtime image
+FROM alpine:latest
 
-CMD ["./sidecar"]
+# Set the working directory
+WORKDIR /app
+
+# Copy the compiled binary from the builder stage
+COPY --from=builder /app/sidecar .
+
+# Set the entrypoint to the compiled binary
+ENTRYPOINT ["./sidecar"]
